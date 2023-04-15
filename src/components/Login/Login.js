@@ -11,11 +11,19 @@ const Login = (props) => {
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
-  // Using useEffect for refactoring the code and check formValidity at one place instead of emailchangeHandler and passwordChangeHandler
+  // Using useEffect for refactoring the code and check formValidity at one place instead of emailchangeHandler and passwordChangeHandler.
   useEffect(() => {
-    setFormIsValid(
-      enteredEmail.includes("@") && enteredPassword.trim().length > 6
-    );
+    // Using Debouncing.
+    const identifier = setTimeout(() => {
+      setFormIsValid(
+        enteredEmail.includes("@") && enteredPassword.trim().length > 6
+      );
+    }, 500);
+
+    // Using useEffect Cleanup function. It runs we the component unmount except the first time.
+    return () => {
+      clearTimeout(identifier);
+    };
   }, [enteredEmail, enteredPassword]);
 
   const emailChangeHandler = (event) => {
